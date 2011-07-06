@@ -123,11 +123,17 @@ def get(path1, path2, opts):
     opts += configopts('get')
     return create_filesystem(opts).get(path1, path2, opts)
 
+import gzip
+def openFile(f):
+    if f.endswith(".gz"):
+        return gzip.open(f)
+    return open(f)
 
 def encodepipe(opts=[]):
     addedopts = getopts(opts, ['addpath', 'file', 'alreadycoded'])
     if addedopts['file']:
-        files = (open(f) for f in addedopts['file'])
+
+        files = (openFile(f) for f in addedopts['file'])
     else:
         files = [sys.stdin]
     for file in files:
@@ -147,7 +153,7 @@ def encodepipe(opts=[]):
 def decodepipe(opts=[]):
     addedopts = getopts(opts, ['file'])
     if addedopts['file']:
-        files = (open(f) for f in addedopts['file'])
+        files = (openFile(f) for f in addedopts['file'])
     else:
         files = [sys.stdin]
     for file in files:
