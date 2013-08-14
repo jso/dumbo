@@ -2,6 +2,7 @@ import os
 import sys
 import unittest
 from dumbo import cmd, util
+from dumbo.util import Options
 
 class TestExamples(unittest.TestCase):
 
@@ -18,7 +19,7 @@ class TestExamples(unittest.TestCase):
             self.tstdir = "./"
         self.logfile = open(self.tstdir+"log.txt", "w")
         self.outfile = self.tstdir + "output.code"
-        self.common_opts = [('checkoutput', 'no')]
+        self.common_opts = Options([('checkoutput', 'no')])
 
     def tearDown(self):
         self.logfile.close()
@@ -35,7 +36,7 @@ class TestExamples(unittest.TestCase):
 
     def testoowordcount(self):
         opts = self.common_opts
-        opts += [('excludes', self.exdir+'excludes.txt'), 
+        opts += [('excludes', self.exdir+'excludes.txt'),
                  ('input', self.exdir+'brian.txt'), ('output', self.outfile)]
         retval = cmd.start(self.exdir+'oowordcount.py', opts,
                            stdout=self.logfile, stderr=self.logfile)
@@ -82,8 +83,8 @@ class TestExamples(unittest.TestCase):
         self.assertEqual(0, retval)
         output = dict(util.loadcode(open(self.outfile)))
         self.assertEqual(6, int(output[('A', 'Brian')]))
-        self.assertEqual(6, int(output[('B', 'Eno')]))        
-    
+        self.assertEqual(6, int(output[('B', 'Eno')]))
+
 
 if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestExamples)
