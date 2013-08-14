@@ -143,7 +143,8 @@ def execute(cmd,
             precmd='',
             printcmd=True,
             stdout=sys.stdout,
-            stderr=sys.stderr):
+            stderr=sys.stderr,
+            executable="/bin/sh"):
     if precmd:
         cmd = ' '.join((precmd, cmd))
     args = ' '.join("-%s '%s'" % (key, value) for (key, value) in opts)
@@ -151,14 +152,14 @@ def execute(cmd,
         cmd = ' '.join((cmd, args))
     if printcmd:
         print >> stderr, 'EXEC:', cmd
-    return system(cmd, stdout, stderr)
+    return system(cmd, stdout, stderr, executable)
 
 
-def system(cmd, stdout=sys.stdout, stderr=sys.stderr):
+def system(cmd, stdout=sys.stdout, stderr=sys.stderr, executable="/bin/sh"):
     if sys.version[:3] == '2.4':
         return os.system(cmd) / 256
     proc = subprocess.Popen(cmd, shell=True, stdout=stdout,
-                            stderr=stderr)
+                            stderr=stderr, executable=executable)
     return os.waitpid(proc.pid, 0)[1] / 256
 
 

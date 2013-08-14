@@ -80,12 +80,24 @@ def start(prog,
             print >> sys.stderr, 'ERROR:', prog, 'does not exist'
             return 1
         prog = '-m ' + prog
-    return execute("%s %s" % (sys.executable, prog),
-                   opts,
-                   pyenv,
-                   stdout=stdout,
-                   stderr=stderr,
-                   printcmd=False)
+
+    # try to grab the shell to use
+    shellopt = getopt(opts, "shell", delete=False)
+    if shellopt:
+        return execute("%s %s" % (sys.executable, prog),
+                       opts,
+                       pyenv,
+                       stdout=stdout,
+                       stderr=stderr,
+                       printcmd=False,
+                       executable=shellopt[0])
+    else:
+        return execute("%s %s" % (sys.executable, prog),
+                       opts,
+                       pyenv,
+                       stdout=stdout,
+                       stderr=stderr,
+                       printcmd=False)
 
 
 def cat(path, opts):

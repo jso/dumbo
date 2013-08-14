@@ -22,8 +22,12 @@ class UnixBackend(Backend):
         return UnixIteration(progopt[0], opts)
 
     def create_filesystem(self, opts):
-        return UnixFileSystem()
-
+        # are we given a specific shell?
+        shell = getopt(opts, "shell", delete=False)
+        if shell:
+            return UnixFileSystem(shell[0])
+        else:
+            return UnixFileSystem()
 
 class UnixIteration(Iteration):
 
@@ -112,20 +116,23 @@ class UnixIteration(Iteration):
 
 class UnixFileSystem(FileSystem):
     
+    def __init__(self, shell="/bin/sh"):
+        self.shell = shell
+
     def cat(self, path, opts):
         return decodepipe(opts + [('file', path)])
     
     def ls(self, path, opts):
-        return execute("ls -l '%s'" % path, printcmd=False)
+        return execute("ls -l '%s'" % path, printcmd=False, executable=self.shell)
     
     def exists(self, path, opts):
-        return execute("test -e '%s'" % path, printcmd=False)
+        return execute("test -e '%s'" % path, printcmd=False, executable=self.shell)
     
     def rm(self, path, opts):
-        return execute("rm -rf '%s'" % path, printcmd=False)
+        return execute("rm -rf '%s'" % path, printcmd=False, executable=self.shell)
     
     def put(self, path1, path2, opts):
-        return execute("cp '%s' '%s'" % (path1, path2), printcmd=False)
+        return execute("cp '%s' '%s'" % (path1, path2), printcmd=False, executable=self.shell)
     
     def get(self, path1, path2, opts):
-        return execute("cp '%s' '%s'" % (path1, path2), printcmd=False)
+        return execute("cp '%s' '%s'" % (path1, path2), printcmd=False, executable=self.shell)

@@ -35,9 +35,10 @@ def create_filesystem(opts):
 ##     due to circular dependencies.                           ##
 #################################################################
 
-from dumbo.backends import streaming, unix
+from dumbo.backends import streaming, unix, punix
 
 backends = [
         streaming.StreamingBackend(),
+        punix.PunixBackend(),
         unix.UnixBackend()
     ]
