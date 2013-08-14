@@ -159,7 +159,7 @@ def encodepipe(opts=None):
     opts.remove(*keys)
 
     ofiles = addedopts['file']
-    files = map(open, ofiles) if ofiles else [sys.stdin]
+    files = map(openFile, ofiles) if ofiles else [sys.stdin]
 
     loadfun = loadcode if addedopts['alreadycoded'] else loadtext
     addpath = addedopts['addpath']
@@ -177,7 +177,7 @@ def encodepipe(opts=None):
 def decodepipe(opts=None):
     opts = opts or Options()
     ofiles = opts.pop('file')
-    files = map(open, ofiles) if ofiles else [sys.stdin]
+    files = map(openFile, ofiles) if ofiles else [sys.stdin]
 
     for _file in files:
         outputs = loadcode(line[:-1] for line in _file)
