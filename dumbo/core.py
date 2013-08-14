@@ -72,6 +72,16 @@ class Job(object):
                 addpathopt = getopt(opts, 'addpath', delete=False)
                 getpathopt = getopt(opts, 'getpath', delete=False)
 
+                # only do this for the first iteration...
+                if iter == 0:
+                    # JSO: handle inputfile options here; we are past the point where a 
+                    # bunch of things would get dumped to the commandline.
+                    inputfiles = getopt(opts, 'inputfile', delete=True) # this deletes the inputfile options from opts
+                    for inputfile in inputfiles:
+                        for l in open(inputfile):
+                            infile = l.strip()
+                            opts.append(("input", infile))
+
                 job_inputs = getopt(opts, 'input', delete=False)
                 if not job_inputs:
                     print >> sys.stderr, 'ERROR: No input path specified'
