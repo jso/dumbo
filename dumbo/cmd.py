@@ -152,23 +152,6 @@ def openFile(f):
         return gzip.open(f)
     return open(f)
 
-<<<<<<< HEAD
-def encodepipe(opts=[]):
-    addedopts = getopts(opts, ['addpath', 'file', 'alreadycoded'])
-    if addedopts['file']:
-
-        files = (openFile(f) for f in addedopts['file'])
-    else:
-        files = [sys.stdin]
-    for file in files:
-        outputs = (line[:-1] for line in file)
-        if addedopts['alreadycoded']:
-            outputs = loadcode(outputs)
-        else:
-            outputs = loadtext(outputs)
-        if addedopts['addpath']:
-            outputs = (((file.name, key), value) for (key, value) in outputs)
-=======
 def encodepipe(opts=None):
     opts = opts or Options()
     keys = ['addpath', 'file', 'alreadycoded']
@@ -185,23 +168,12 @@ def encodepipe(opts=None):
         outputs = loadfun(line[:-1] for line in _file)
         if addpath:
             outputs = (((_file.name, key), value) for (key, value) in outputs)
->>>>>>> cfe206500968b2fda72969039aa20e9715dc3c76
         for output in dumpcode(outputs):
             print '\t'.join(output)
         _file.close()
     return 0
 
 
-<<<<<<< HEAD
-def decodepipe(opts=[]):
-    addedopts = getopts(opts, ['file'])
-    if addedopts['file']:
-        files = (openFile(f) for f in addedopts['file'])
-    else:
-        files = [sys.stdin]
-    for file in files:
-        outputs = loadcode(line[:-1] for line in file)
-=======
 def decodepipe(opts=None):
     opts = opts or Options()
     ofiles = opts.pop('file')
@@ -209,7 +181,6 @@ def decodepipe(opts=None):
 
     for _file in files:
         outputs = loadcode(line[:-1] for line in _file)
->>>>>>> cfe206500968b2fda72969039aa20e9715dc3c76
         for output in dumptext(outputs):
             print '\t'.join(output)
         _file.close()
